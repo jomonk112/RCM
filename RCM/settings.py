@@ -22,6 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'vg6n2a)c3hu-x0&==ar@f*7-$2y$mf9rugg=a$c!7ky$a)3=_w'
 
+AUTH_USER_MODEL = 'user_management.AppUser'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -134,7 +136,6 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
 
     ),
-    # 'EXCEPTION_HANDLER': 'baseapp.utils.pd_exception_handler'
     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'}
 
 JWT_AUTH = {
@@ -143,9 +144,6 @@ JWT_AUTH = {
 
     'JWT_DECODE_HANDLER':
     'rest_framework_jwt.utils.jwt_decode_handler',
-
-    # 'JWT_PAYLOAD_HANDLER':
-    # 'baseapp.utils.jwt_payload_handler',
 
     'JWT_PAYLOAD_GET_USER_ID_HANDLER':
     'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
