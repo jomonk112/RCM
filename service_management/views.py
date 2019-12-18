@@ -49,5 +49,19 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
                     'amount':item.currency_code +" "+str(item.denomination)
                     }for item in coupons]
         return self.rcm_response(code='HTTP_200_OK', data={"results": results})
+    
+    def retrieve(self,request,pk):
+        try:
+            coupon = Coupons.objects.get(pk=pk)
+            result = {'id':str(coupon.id),'brnad_name':coupon.brand.brand_name,
+                        'brand_id':str(coupon.brand.id),
+                        'coupon_code': coupon.coupon_code,
+                        'amount':coupon.currency_code +" "+str(coupon.denomination)
+                        }
+            return self.rcm_response(code='HTTP_200_OK', data={"results": result})
+        except Exception as e:
+            return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data={'status':False,
+                                                                              'message':str(e)})
+            
         
             
