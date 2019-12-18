@@ -8,7 +8,7 @@ from .views import BrandManagement,CouponManagement
 router = DefaultRouter()
 
 router.register(r'brand', BrandManagement, basename='brands')
-router.register(r'coupon', BrandManagement, basename='brands')
+router.register(r'coupon', CouponManagement, basename='coupons')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -10,5 +10,6 @@ class Brands(models.Model):
 class Coupons(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     brand = models.ForeignKey(Brands, related_name='brand',on_delete=models.CASCADE)
-    code = models.CharField(max_length=100, unique=True)
-    value = models.IntegerField()
+    coupon_code = models.CharField(max_length=100, unique=True)
+    currency_code = models.CharField(max_length=100, default='INR',blank=True)
+    denomination = models.IntegerField()
