@@ -40,4 +40,14 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
             return self.rcm_response(code='HTTP_200_OK', data={"id": str(coupon.id),
                                                               "message": COUPON_UPDATE})
         return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data=self.get_form_errors_if_any(form)[0])
+    
+    def list(self,request):
+        coupons = Coupons.objects.all()
+        results = [{'id':str(item.id),'brnad_name':item.brand.brand_name,
+                    'brand_id':str(item.brand.id),
+                    'coupon_code': item.coupon_code,
+                    'amount':item.currency_code +" "+str(item.denomination)
+                    }for item in coupons]
+        return self.rcm_response(code='HTTP_200_OK', data={"results": results})
+        
             
