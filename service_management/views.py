@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
+
 from rest_framework import viewsets
 from mixins import ResponseViewMixin
 from .forms import BrandForm, CouponForm
@@ -40,6 +44,10 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
                                                               "message": COUPON_UPDATE})
         return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data=self.get_form_errors_if_any(form)[0])
     
+    
+    
+    @method_decorator(cache_page(60*60*2))
+    @method_decorator(vary_on_cookie)
     def list(self, request):
         amount = self.request.query_params.get('amount', None)
         brand = self.request.query_params.get('brand', None)
