@@ -66,6 +66,10 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
                     }for item in coupons]
         return self.rcm_response(code='HTTP_200_OK', data={"results": results})
     
+    
+    
+    @method_decorator(cache_page(60*60*2))
+    @method_decorator(vary_on_cookie)
     def retrieve(self,request,pk):
         try:
             coupon = Coupons.objects.get(pk=pk)
