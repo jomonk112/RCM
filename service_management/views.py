@@ -22,7 +22,6 @@ class BrandManagement(viewsets.ViewSet, ResponseViewMixin):
 class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
 
     def create(self, request):
-        print("hit in coupon")
         data = request.data
         form = CouponForm(data, instance=None)
         if form.is_valid():
@@ -41,8 +40,17 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
                                                               "message": COUPON_UPDATE})
         return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data=self.get_form_errors_if_any(form)[0])
     
-    def list(self,request):
+    def list(self, request):
+        amount = self.request.query_params.get('amount', None)
+        brand = self.request.query_params.get('brand', None)
+
         coupons = Coupons.objects.all()
+        
+        if amount:
+            coupons = coupons.filter(denomination=amount)
+        if brand:
+            coupons = coupons.filter(brand__brand_name=str(brand))
+        
         results = [{'id':str(item.id),'brnad_name':item.brand.brand_name,
                     'brand_id':str(item.brand.id),
                     'coupon_code': item.coupon_code,
