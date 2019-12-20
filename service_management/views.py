@@ -4,6 +4,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie
 
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
+
 from rest_framework import viewsets
 from mixins import ResponseViewMixin
 from .forms import BrandForm, CouponForm
@@ -82,6 +85,40 @@ class CouponManagement(viewsets.ViewSet, ResponseViewMixin):
         except Exception as e:
             return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data={'status':False,
                                                                               'message':str(e)})
+            
+class DynamoDBManagement(viewsets.ViewSet, ResponseViewMixin):
+    
+    
+    def list(self, request):
+        results=[]
+        amount = self.request.query_params.get('amount', None)
+        try:
+            dynamodb = boto3.resource('dynamodb')
+            table = dynamodb.Table('Coupons')
+            
+            if amount !='':
+                response = table.query(
+                    KeyConditionExpression=Key('denomination').eq(int(amount))
+                    )
+                
+                items = response['Items']
+                results = self.get_items(items)
+            
+            return self.rcm_response(code='HTTP_200_OK', data={"results":results})
+        except Exception as e:
+            return self.rcm_error_response(code='HTTP_400_BAD_REQUEST', data={'status':False,
+                                                                              'message':str(e)})
+    def get_items(self,items):
+        results = [{'id':item['id'],'brnad_name':item['brnad_name'],
+                    'brand_id':item['brand_id'],
+                    'coupon_code': item['coupon_code'],
+                    'amount':item['amount']
+                    }for item in items]
+        return results
+        
+        
+    
+    
             
         
             

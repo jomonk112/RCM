@@ -12,11 +12,11 @@ class Command(BaseCommand):
             TableName='Coupons',
             KeySchema=[
                 {
-                    'AttributeName': 'coupon_code',
+                    'AttributeName': 'denomination',
                     'KeyType': 'HASH'
                 },
                 {
-                    'AttributeName': 'denomination',
+                    'AttributeName': 'coupon_code',
                     'KeyType': 'RANGE'
                 },
             ],
